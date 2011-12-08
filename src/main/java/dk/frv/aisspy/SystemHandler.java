@@ -236,7 +236,7 @@ public class SystemHandler implements IAisHandler {
 	public int getRegionTimeout() {
 		return regionTimeout;
 	}
-
+	
 	public void setRegionTimeout(int regionTimeout) {
 		this.regionTimeout = regionTimeout;
 	}

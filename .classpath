@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="lib" path="build/aisspy.jar"/>
+	<classpathentry kind="lib" path="dist/lib/aislib-0.5.jar"/>
+	<classpathentry kind="lib" path="dist/lib/aisspy.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="dist/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="dist/lib/mail.jar"/>
+	<classpathentry kind="lib" path="dist/lib/wrapper.jar"/>
+	<classpathentry kind="lib" path="dist/lib/wrappertest.jar"/>
+	<classpathentry kind="lib" path="extlib/aislib-0.5.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-httpclient.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="extlib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="extlib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="extlib/mail.jar"/>
+	<classpathentry kind="lib" path="extlib/wrapper.jar"/>
+	<classpathentry kind="lib" path="extlib/wrappertest.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

@@ -66,6 +66,8 @@ public class HttpHandler extends Thread {
 				countryStatus();			
 			} else if (requestUri.endsWith("region_status")) {
 				regionStatus();
+			} else if (requestUri.endsWith("base_station_status")) {
+				baseStationStatus();
 			} else if (requestUri.endsWith("full_status_js")) {
 				fullStatusJS();
 			} else if (requestUri.endsWith("bs_status_js")) {
@@ -87,6 +89,47 @@ public class HttpHandler extends Thread {
 		} catch (IOException e) {
 			LOG.info("Client socket failed: " + e.getMessage());
 		}
+	}
+	
+	private void baseStationStatus() {
+		SystemHandler handler = getSystem();
+		if (handler == null) {
+			return;
+		}
+		String bsStr = getParam("bs");
+		if (bsStr == null) {
+			httpResponse.setBadRequest();
+			httpResponse.setContent("Missing bs argument");
+			return;
+		}
+		long bs;
+		try {
+			bs = Long.parseLong(bsStr);
+		} catch (NumberFormatException e) {
+			httpResponse.setBadRequest();
+			httpResponse.setContent("Bad bs argument");
+			return;
+		}
+		
+		double rate = 0;
+		Status status = Status.OK;
+		Date last = new Date(0);
+		
+		FlowStatEntry bsFlow = handler.getStats().getBaseStationOrigin().get(bs);
+		if (bsFlow == null) {
+			status = Status.FAIL;
+		} else {
+			Date now = new Date();
+			last = bsFlow.getLastReceived();
+			rate = bsFlow.getRate();
+			if (((now.getTime() - last.getTime()) / 1000) > handler.getBaseStationTimeout()) {
+				status = Status.FAIL;
+			}
+		}
+		
+		String httpReply = String.format("status=%s&last_received=%s&rate=%s",status.name(), Formatter.dateFormat(last), Formatter
+				.rateFormat(rate));
+		httpResponse.setContent(httpReply);
 	}
 	
 	private void regionStatus() {
