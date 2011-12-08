@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Stires Status</title>
+	<link type="text/css" rel="stylesheet" href="style/style.css" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<!-- Adjust the JS URL below to point to the running AisSpy daemon -->
+	<script type="text/javascript" src="http://localhost:8088/full_stires_status_js"></script>
+	<script type="text/javascript">		
+		function w(s) {
+			document.write(s);
+		}		
+		var sURL = unescape(window.location.pathname);
+		function doLoad() {
+		    setTimeout( "refresh()", 10*1000 );
+		}
+		function refresh() {
+		    window.location.reload( false );
+		}
+	</script>
+</head>
+<body onload="doLoad()">
+
+<div style="clear:left;">
+<script type="text/javascript">
+
+if (window.stiresSystems === undefined) {
+	w('<h1 class="error">No contact to daemon</h1>');
+}
+else {
+	w('<h1>Stires proxies</h1>');
+	w('<table cellpadding="3" border="0">');
+	w('<tr class="stiresServerTitle">');
+	for (var j=0; j < stiresServers.length; j++) {
+		w('<td colspan="6">' + stiresServers[j] + '</td>'); 		
+	}
+	w('</tr>');
+	
+	w('<tr class="stiresHeadings">');
+	for (var j=0; j < stiresServers.length; j++) {
+		w('<td>Status</td>');
+		w('<td>Name</td>');
+		w('<td>Connection to Stires</td>');
+		w('<td>Flow</td>');
+		w('<td>Proxy connected</td>');
+		w('<td>Proxy data</td>');	 		
+	}
+	w('</tr>');
+		
+	
+	for (var i=0; i < stiresSystems.length; i++) {
+		var system = stiresSystems[i];
+		for (var e=0; e < stiresSystemCountries[system].length; e++) {
+			var country = stiresSystemCountries[system][e];
+			w('<tr>');
+			for (var j=0; j < stiresServers.length; j++) {			
+				var server = stiresServers[j];
+				var proxy = stiresProxies[system][country][server];
+				if (proxy.server != server) {
+					//alert('Mismatch ' + proxy.server + ' != ' + server);
+				} 
+
+				var okImgTag = '<img src="images/ok.png" width="20"/>';
+				var nokImgTag = '<img src="images/nok.png" width="20"/>';
+				var warningImgTag = '<img src="images/warning.jpg" width="20"/>';
+				
+				var tdClass = 'stiresOk';
+				if (proxy.status == 'ERROR') {
+					tdClass = 'stiresError';
+				} else if (!proxy.enabled) {
+					tdClass = 'stiresDisabled';
+				} else if (proxy.status == 'WARNING') {
+					tdClass = 'stiresWarning';
+				}
+				
+				var statusImgSrc = okImgTag;
+				if (proxy.status == 'ERROR') {
+					statusImgSrc = nokImgTag;
+				} else if (proxy.status == 'WARNING') {
+					statusImgSrc = warningImgTag;
+				}
+				w('<td class="' + tdClass + '">'+statusImgSrc+'</td>');
+				w('<td class="' + tdClass + '">');
+				w('<a href="' + proxy.url + '" title="Last check: ' + proxy.lastCheck + '">'); 
+				w(proxy.system + ' ' + country);
+				w('</a>');
+				w('</td>');
+				if (!proxy.running) {
+					w('<td class="' + tdClass + '" colspan="4">Not running</td>');
+					continue;
+				}
+				w('<td class="' + tdClass + '">');
+				if (proxy.connectedToStires) {
+				 	w(proxy.stiresRemoteAddr);
+				} else {
+					w(nokImgTag);
+				}
+				w('</td>');
+				w('<td class="' + tdClass + '">' + proxy.flow + '</td>');				
+				w('<td class="' + tdClass + '">');
+				if (proxy.providerConnected) {
+					w('OK');
+				} else {
+					w(nokImgTag);
+				}
+				w('</td>');
+				w('<td class="' + tdClass + '">');
+				if (proxy.providerDelivering) {
+					w('OK');
+				} else {
+					w(warningImgTag);
+				}
+				w('</td>');				
+			}
+			w('</tr>');
+		}
+	}
+
+	w('</table>');	
+}
+</script>
+
+</div>
+
+<div style="clear:left;">
+<br/>
+<table cellpadding="3" border="0">
+<tr class="stiresHeadings">
+	<td>Legend</td>
+	<td>Description</td>
+</tr>
+<tr>
+	<td class="stiresOk">OK</td><td>Proxy OK and active</td>
+</tr>
+<tr>	
+	<td class="stiresDisabled">OK (disabled)</td><td>Proxy OK but disabled</td>
+</tr>
+<tr>	
+	<td class="stiresWarning">Warning</td><td>Proxy active but warning. Warning if no data delivered to proxy.</td>
+</tr>
+<tr>		
+	<td class="stiresError">Error</td><td>Proxy error. Possible errors: 1) Proxy cannot be reached, either not running or server not running. 2) Proxy not connected to Stires. 3) Proxy cannot connect to Gatehouse proxy.</td>
+</tr>
+</table>
+
+</div>
+
+
+</body>
+</html>

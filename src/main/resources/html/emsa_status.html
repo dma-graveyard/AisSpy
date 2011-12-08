@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>DaMSA AIS & Stires proxy status</title>
+	<link type="text/css" rel="stylesheet" href="style/style.css" />
+	<link type="text/css" rel="stylesheet" href="style/emsa.css" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<script type="text/javascript" src="http://enav.frv.dk/aisstatus/full_status_js"></script>
+	<script type="text/javascript" src="http://enav.frv.dk/aisstatus/full_stires_status_js"></script>	
+	<script type="text/javascript">		
+		function w(s) {
+			document.write(s);
+		}		
+		var sURL = unescape(window.location.pathname);
+		function doLoad() {
+		    setTimeout( "refresh()", 10*1000 );
+		}
+		function refresh() {
+		    window.location.reload( false );
+		}
+	</script>
+</head>
+<body onload="doLoad()">
+
+<div style="clear:left;">
+<h1>Stires proxy status</h1>
+
+<script type="text/javascript">
+if (window.stiresSystems === undefined) {
+	w('<h1 class="error">No contact to surveillance system</h1>');
+}
+else {
+	w('<table cellpadding="2" border="0">');
+	w('<tr class="stiresServerTitle">');
+	for (var j=0; j < stiresServers.length; j++) {
+		w('<td colspan="6">server' + (j + 1) + '</td>'); 		
+	}
+	w('</tr>');
+	
+	w('<tr class="stiresHeadings">');
+	for (var j=0; j < stiresServers.length; j++) {
+		w('<td>Status</td>');
+		w('<td>Name</td>');
+		w('<td>Stires connection</td>');
+		w('<td>Tx</td>');
+		w('<td>Provider connected</td>');
+		w('<td>Provider data</td>');	 		
+	}
+	w('</tr>');
+		
+	
+	for (var i=0; i < stiresSystems.length; i++) {
+		var system = stiresSystems[i];
+		for (var e=0; e < stiresSystemCountries[system].length; e++) {
+			var country = stiresSystemCountries[system][e];
+			w('<tr>');
+			for (var j=0; j < stiresServers.length; j++) {			
+				var server = stiresServers[j];
+				var proxy = stiresProxies[system][country][server];
+				if (proxy.server != server) {
+					//alert('Mismatch ' + proxy.server + ' != ' + server);
+				} 
+
+				var okImgTag = '<img src="images/ok.png" width="16" title="' + proxy.lastCheckUTC + '"/>';
+				var nokImgTag = '<img src="images/nok.png" width="16" title="' + proxy.lastCheckUTC + '"/>';
+				var warningImgTag = '<img src="images/warning.jpg" width="16" title="Last check: ' + proxy.lastCheckUTC + '"/>';
+				
+				var tdClass = 'stiresOk';
+				if (proxy.status == 'ERROR') {
+					tdClass = 'stiresError';
+				} else if (!proxy.enabled) {
+					tdClass = 'stiresDisabled';
+				} else if (proxy.status == 'WARNING') {
+					tdClass = 'stiresWarning';
+				}
+				
+				var statusImgSrc = okImgTag;
+				if (proxy.status == 'ERROR') {
+					statusImgSrc = nokImgTag;
+				} else if (proxy.status == 'WARNING') {
+					statusImgSrc = warningImgTag;
+				}
+				w('<td class="' + tdClass + '">'+statusImgSrc+'</td>');
+				w('<td class="' + tdClass + '">'); 
+				w(proxy.system + ' ' + country);
+				w('</td>');
+				if (!proxy.running) {
+					w('<td class="' + tdClass + '" colspan="4">Not running</td>');
+					continue;
+				}
+				w('<td class="' + tdClass + '">');
+				if (proxy.connectedToStires) {
+				 	w(proxy.stiresRemoteAddr);
+				} else {
+					w(nokImgTag);
+				}
+				w('</td>');
+				w('<td class="' + tdClass + '">' + proxy.flow + '</td>');				
+				w('<td class="' + tdClass + '">');
+				if (proxy.providerConnected) {
+					w('OK');
+				} else {
+					w(nokImgTag);
+				}
+				w('</td>');
+				w('<td class="' + tdClass + '">');
+				if (proxy.providerDelivering) {
+					w('OK');
+				} else {
+					w(warningImgTag);
+				}
+				w('</td>');				
+			}
+			w('</tr>');
+		}
+	}
+
+	w('</table>');	
+}
+</script>
+</div>
+
+<div style="clear:left;">
+<br/>
+<table cellpadding="3" border="0">
+<tr class="stiresHeadings">
+	<td>Legend</td>
+	<td>Description</td>
+</tr>
+<tr>
+	<td class="stiresOk">OK</td><td>Proxy OK and active</td>
+</tr>
+<tr>	
+	<td class="stiresDisabled">OK (disabled)</td><td>Proxy OK but disabled</td>
+</tr>
+<tr>	
+	<td class="stiresWarning">Warning</td><td>Proxy active but warning. Warning if no data delivered to proxy.</td>
+</tr>
+<tr>		
+	<td class="stiresError">Error</td><td>Proxy error. Possible errors: 1) Proxy cannot be reached, either not running or server not running. 2) Proxy not connected to Stires. 3) Proxy cannot connect to provider.</td>
+</tr>
+</table>
+
+</div>
+
+<div style="clear:left;">
+<h1>DaMSA AIS flow Helcom and Northsea</h1>
+
+<script type="text/javascript">
+if (window.systems === undefined) {
+	w('<h1 class="error">No contact to daemon</h1>');
+}
+else {
+	for (var i=0; i < systems.length; i++) {
+		var sysWarn = false;
+		var sys = systems[i];
+		if (sys.name != 'Helcom' && sys.name != 'Northsea') {
+			continue;
+		}
+		var clearLeft = (i % 3 == 0) ? 'style="clear:left;"' : '';  
+		w('<div class="system"' + clearLeft + '><h2 class="systemTitle">' + sys.name + '</h2>');
+		
+		var sysError = (sys.status == 'FAIL');
+		var trClass = 'odd';
+		//var statusImg = 'ok.png';
+		var statusImg = 'spinner-green.gif';
+		var proxyImg = (sys.proxyConnected == 'YES') ? 'ok.png' : 'nok.png';
+		var proxyTdClass = (sys.proxyConnected == 'YES') ? '' : ' error';
+		var tdClass = '';
+		if (sysError) {
+			statusImg = 'nok.png';
+			tdClass  = ' error';
+		}
+		var statusId = 'statusTd' + sys.name;
+		
+		w('<table cellpadding="2" width="100%">');
+		w('<tr class="' + trClass + '">');
+		w('<td class="status_header' + tdClass + '">Status</td>');
+		w('<td class="data odd" id="' + statusId + '"><img src="images/'+ statusImg +'" width="20"/></td>');
+		w('</tr>');
+		w('<tr class="' + trClass + '">');
+		w('<td class="status_header' + tdClass + '">Last received</td>');
+		w('<td class="data odd' + tdClass + '">' + sys.lastReceivedUTC + '</td>');
+		w('</tr>');
+		w('<tr class="' + trClass + '">');
+		w('<td class="status_header' + tdClass + '">Rate</td>');
+		w('<td class="data odd' + tdClass + '">' + sys.rate + '</td>');
+		w('</tr>');
+		w('<tr class="' + trClass + '">');
+		w('<td class="status_header' + proxyTdClass + '">Proxy connected</td>');
+		w('<td class="data odd"><img src="images/' + proxyImg + '" width="16"/></td>');
+		w('</tr>');
+		w('</table>');
+	
+		w('<br/>');
+	
+		w('<table cellpadding="2" width="100%">');
+		w('<tr>');
+		w('<td class="status_header">Status</td>');
+		w('<td class="status_header" colspan="2">Country</td>');
+		w('<td class="status_header">Last received</td>');
+		w('<td class="status_header">Rate</td>');
+		w('</tr>');
+			
+	
+		var countries = sys.countries;
+		for (var e = 0; e < countries.length; e++) {
+			var country = countries[e];
+			var countryError = (country.status == 'FAIL');
+			sysWarn |= countryError;
+			var trClass = 'odd';
+			var tdClass = '';
+			if (e % 2 == 0) {
+				trClass  = 'even';
+			}
+			var statusImg = 'ok.png';
+			
+			if (countryError) {
+				statusImg = 'nok.png';
+				tdClass  = ' error';
+			}
+			
+			w('<tr class="' + trClass + '">');
+			w('<td class="data img"><img src="images/' + statusImg + '" width="16"/></td>');		
+			w('<td class="data img"><img src="images/flags/' + country.name + '.png" width="18"/></td>');
+			w('<td class="data' + tdClass + '">' + country.name + '</td>');
+			w('<td class="data' + tdClass + '">' + country.lastReceivedUTC + '</td>');
+			w('<td class="data' + tdClass + '" align="right">' + country.rate + '</td>');
+			w('</tr>');				
+		}
+	
+		w('</table></div>');	
+		if (!sysError && sysWarn) {
+			document.getElementById(statusId).innerHTML += '<img src="images/warning.jpg" width="20" align="right"/>';
+		}
+	}
+}
+</script>
+</div>
+
+</body>
+</html>

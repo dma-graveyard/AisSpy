@@ -1,0 +1,96 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 10px;
+	color: black;
+	font-family: verdana, geneva, arial, sans-serif;
+	font-size: 0.7em;
+}
+
+.systemTitle {
+	color: #FFFFFF;
+	background: #474747;
+	padding: 5px;
+}
+
+h1.error {
+	font-weight: bold;
+	color: red;
+	font-size: 2em;
+}
+
+div.system {
+	width:350px;
+	float:left;
+	margin:4px;
+	margin-bottom:20px;
+}
+
+a:link, a:hover, a:active, a:visited { color: black; }
+
+.title {
+	font-size: 2em;
+	font-weight: bold;
+}
+
+td.status_header {
+	font-weight: bold;
+	background-color: #dcdcdc;
+	white-space: nowrap;
+}
+
+td.data {
+	font-family: Courier New;
+	font-size: 1.0em;
+	white-space: nowrap;
+}
+
+tr.odd {
+	background-color: #ececec;
+}
+
+tr.even {
+	background-color: #f6f6f6;
+}
+
+td.img {
+	text-align: center;
+}
+
+td.error {
+	font-weight: bold;
+	color: red;
+}
+
+td.stiresError {
+	background-color: red;
+	color: white;
+	font-weight: bold;
+}
+
+
+td.stiresOk {
+	background-color: #F5FFF2;
+}
+
+td.stiresDisabled {
+	background-color: #CFCFCF;
+	color: grey;
+}
+
+td.stiresWarning {
+	background-color: #FFF78A;
+}
+
+tr.stiresServerTitle {
+	font-weight: bold;
+	font-size: 1.5em;
+	background-color: grey;
+	color: white;
+}
+
+tr.stiresHeadings {
+	font-weight: bold;
+	font-size: 1.0em;
+}
+

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>AisSpy Status</title>
+	<link type="text/css" rel="stylesheet" href="style/style.css" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<!-- Adjust the JS URL below to point to the running AisSpy daemon -->
+	<script type="text/javascript" src="http://localhost:8088/bs_status_js"></script>
+	<script type="text/javascript">		
+		function w(s) {
+			document.write(s);
+		}		
+		var sURL = unescape(window.location.pathname);
+		function doLoad() {
+		    setTimeout( "refresh()", 10*1000 );
+		}
+		function refresh() {
+		    window.location.reload( false );
+		}
+	</script>
+</head>
+<body onload="doLoad()">
+
+<div style="clear:left;">
+<script type="text/javascript">
+if (window.systems === undefined) {
+	w('<h1 class="error">No contact to daemon</h1>');
+}
+else {
+	w('<h1>Base stations</h1>');
+	for (var i=0; i < systems.length; i++) {
+		var sys = systems[i];
+
+		w('<h2 class="systemTitle">' + sys.name + '</h2>');
+
+		var countries = sys.countries;
+		for (var e = 0; e < countries.length; e++) {
+			var country = countries[e];
+			w('<div><h3>' + country.name + ' <img src="images/flags/' + country.name + '.png" width="18"/></h3>');
+			w('<table cellpadding="4">');
+			w('<tr>');
+			w('<th>MMSI</th>');
+			w('<th>Lat</th>');
+			w('<th>Lon</th>');
+			w('<th>Last received</th>');
+			w('</tr>');
+			
+			for (var j = 0; j < country.baseStations.length; j++) {
+				w('<tr>');
+				var baseStation = country.baseStations[j];
+				w('<td class="data">' + baseStation.mmsi + '</td>');
+				w('<td class="data">' + baseStation.lat + '</td>');
+				w('<td class="data">' + baseStation.lon + '</td>');
+				w('<td class="data">' + baseStation.lastReceivedUTC + '</td>');
+				w('</tr>');
+			}
+
+			w('</table>');			
+
+			w('</div>');
+		}
+		
+	}
+}
+</script>
+</div>
+
+</body>
+</html>

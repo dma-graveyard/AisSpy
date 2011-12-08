@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 2.2em;
+	margin: 0px;
+	width: 100%;
+	overflow: hidden;
+}
+
+div.system {
+	width: 100%;
+}
+
+td.data {
+	white-space: normal;
+	font-size: 0.8em;
+}
+

@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 0.6em;
+}
+
+div.system {
+	width:360px;
+}
