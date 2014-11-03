@@ -33,7 +33,7 @@ public class BaseStation {
 	
 	@Override
 	public int hashCode() {
-		return (int)mmsi;
+		return mmsi;
 	}
 	
 	@Override

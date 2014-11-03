@@ -33,7 +33,7 @@ public class Region {
 	
 	@Override
 	public int hashCode() {
-		return (int)id;
+		return id;
 	}
 	
 	@Override
