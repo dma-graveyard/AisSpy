@@ -5,23 +5,24 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.country.MidCountry;
-import dk.frv.ais.handler.IAisHandler;
-import dk.frv.ais.message.AisMessage;
-import dk.frv.ais.message.AisMessage4;
-import dk.frv.ais.proprietary.IProprietarySourceTag;
-import dk.frv.ais.reader.AisTcpReader;
+import dk.dma.ais.message.AisMessage;
+import dk.dma.ais.message.AisMessage4;
+import dk.dma.ais.packet.AisPacket;
+import dk.dma.ais.proprietary.IProprietarySourceTag;
+import dk.dma.ais.reader.AisTcpReader;
+import dk.dma.enav.model.Country;
 import dk.frv.aisspy.status.SystemStatus;
 
-public class SystemHandler implements IAisHandler {
+public class SystemHandler implements Consumer<AisPacket> {
 
 	private static final Logger LOG = Logger.getLogger(SystemHandler.class);
 
 	private String name;
-	private List<MidCountry> countries = new ArrayList<MidCountry>();
+	private List<Country> countries = new ArrayList<>();
 	private String proxyHost = "localhost";
 	private int proxyPort = 4001;
 	private int countryReceiveFailTime = 30;
@@ -45,13 +46,20 @@ public class SystemHandler implements IAisHandler {
 	}
 
 	@Override
-	public synchronized void receive(AisMessage aisMessage) {
+	public synchronized void accept(AisPacket packet) {
+		AisMessage aisMessage = packet.tryGetAisMessage();
+		if (aisMessage == null) {
+			return;
+		}
+		
 		// Update statistics
 		stats.getFlowStat().received();
 		// Update country
-		IProprietarySourceTag tag = aisMessage.getSourceTag();
+		IProprietarySourceTag tag = aisMessage.getSourceTag();		
 		if (tag != null) {
-			stats.markOrigin(tag.getCountry().getTwoLetter());
+			if (tag.getCountry() != null) {
+				stats.markOrigin(tag.getCountry().getTwoLetter());
+			}
 			stats.markBaseStationOrigin(tag.getBaseMmsi());
 			stats.markRegionOrigin(tag.getRegion());
 			evaluateTimestamp(aisMessage);
@@ -59,7 +67,7 @@ public class SystemHandler implements IAisHandler {
 			LOG.warn("No source tag on message: " + aisMessage);
 		}
 
-		if (aisMessage.getMsgId() == 4) {
+		if (aisMessage.getMsgId() == 4) {			
 			stats.markBaseStationReport((AisMessage4) aisMessage);
 		}
 	}
@@ -78,11 +86,11 @@ public class SystemHandler implements IAisHandler {
 			Date timestamp = msg4.getDate();
 			long diff = Math.abs((now.getTime() - timestamp.getTime()) / 1000);
 			if (diff > oldDataTolerance) {
-				String errorStr = "BS with old timestamp diff: " + diff + " system: " + name + " timestamp: " + timestamp + " now: " + now + "\r\n";
-				errorStr += tag + "\r\n";
-				errorStr += msg4 + "\r\n";
-				errorStr += aisMessage.getVdm().getOrgLinesJoined() + "\r\n";
-				//LOG.error(errorStr);
+//				String errorStr = "BS with old timestamp diff: " + diff + " system: " + name + " timestamp: " + timestamp + " now: " + now + "\r\n";
+//				errorStr += tag + "\r\n";
+//				errorStr += msg4 + "\r\n";
+//				errorStr += aisMessage.getVdm().getOrgLinesJoined() + "\r\n";
+//				LOG.error(errorStr);
 				
 				// Elapsed since last email
 				long elapsed = (now.getTime() - lastBsOldEmail.getTime()) / 1000; 
@@ -129,15 +137,15 @@ public class SystemHandler implements IAisHandler {
 		this.name = name;
 	}
 
-	public List<MidCountry> getCountries() {
+	public List<Country> getCountries() {
 		return countries;
 	}
 
-	public void setCountries(List<MidCountry> countries) {
+	public void setCountries(List<Country> countries) {
 		this.countries = countries;
 	}
 
-	public void addCountry(MidCountry country) {
+	public void addCountry(Country country) {
 		countries.add(country);
 	}
 

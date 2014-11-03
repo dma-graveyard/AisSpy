@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="lib" path="build/aisspy.jar"/>
-	<classpathentry kind="lib" path="dist/lib/aislib-0.5.jar"/>
 	<classpathentry kind="lib" path="dist/lib/aisspy.jar"/>
 	<classpathentry kind="lib" path="dist/lib/commons-codec.jar"/>
 	<classpathentry kind="lib" path="dist/lib/commons-httpclient.jar"/>
@@ -12,7 +11,6 @@
 	<classpathentry kind="lib" path="dist/lib/mail.jar"/>
 	<classpathentry kind="lib" path="dist/lib/wrapper.jar"/>
 	<classpathentry kind="lib" path="dist/lib/wrappertest.jar"/>
-	<classpathentry kind="lib" path="extlib/aislib-0.5.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-codec.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-httpclient.jar"/>
 	<classpathentry kind="lib" path="extlib/commons-lang-2.5.jar"/>
@@ -21,6 +19,14 @@
 	<classpathentry kind="lib" path="extlib/mail.jar"/>
 	<classpathentry kind="lib" path="extlib/wrapper.jar"/>
 	<classpathentry kind="lib" path="extlib/wrappertest.jar"/>
+	<classpathentry kind="lib" path="extlib/slf4j-log4j12-1.7.7.jar"/>
+	<classpathentry kind="lib" path="extlib/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="extlib/guava-17.0.jar"/>
+	<classpathentry kind="lib" path="extlib/dma-commons-util-0.3-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="extlib/joda-time-2.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="extlib/ais-lib-communication-2.2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="extlib/ais-lib-messages-2.2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="extlib/enav-model-0.5-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

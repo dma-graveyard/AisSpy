@@ -16,11 +16,10 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import dk.frv.ais.binary.SixbitExhaustedException;
-import dk.frv.ais.message.AisMessageException;
-import dk.frv.ais.proprietary.GatehouseFactory;
-import dk.frv.ais.reader.AisReader;
-import dk.frv.ais.reader.AisTcpReader;
+import dk.dma.ais.message.AisMessageException;
+import dk.dma.ais.reader.AisReader;
+import dk.dma.ais.reader.AisReaders;
+import dk.dma.ais.reader.AisTcpReader;
 import dk.frv.aisspy.http.HttpServer;
 import dk.frv.aisspy.stires.StiresProxySurveillance;
 import dk.frv.aisspy.stires.StiresSettings;
@@ -36,7 +35,7 @@ public class AisSpy {
 	private static HttpServer httpServer;
 	private static Map<String, SystemHandler> handlers = new HashMap<String, SystemHandler>();
 
-	public static void main(String[] args) throws InterruptedException, IOException, SixbitExhaustedException, AisMessageException {
+	public static void main(String[] args) throws InterruptedException, IOException, AisMessageException {
 		DOMConfigurator.configure("log4j.xml");
 		LOG = Logger.getLogger(AisSpy.class);
 		LOG.info("Starting AisSpy");
@@ -59,9 +58,8 @@ public class AisSpy {
 		// Make readers
 		for (SystemHandler handler : settings.getSystemHandlers()) {
 			handlers.put(handler.getName(), handler);
-			AisTcpReader reader = new AisTcpReader(handler.getProxyHost(), handler.getProxyPort());
-			reader.addProprietaryFactory(new GatehouseFactory());
-			reader.registerHandler(handler);
+			AisTcpReader reader = AisReaders.createReader(handler.getProxyHost(), handler.getProxyPort());
+			reader.registerPacketHandler(handler);
 			handler.setAisReader(reader);
 			readers.add(reader);
 			reader.start();

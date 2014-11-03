@@ -10,8 +10,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 
-import dk.frv.ais.country.Country;
-import dk.frv.ais.country.CountryMapper;
+import dk.dma.enav.model.Country;
 
 public class StiresSettings {
 	
@@ -46,7 +45,7 @@ public class StiresSettings {
 			HashMap<String, ArrayList<StiresProxyStatus>> countryMap = new HashMap<String, ArrayList<StiresProxyStatus>>();
 			
 			for (String country : countries) {
-				Country c = CountryMapper.getInstance().getByCode(country);
+				Country c = Country.getByCode(country);
 				
 				ArrayList<StiresProxyStatus> serverProxyList = new ArrayList<StiresProxyStatus>();				
 				

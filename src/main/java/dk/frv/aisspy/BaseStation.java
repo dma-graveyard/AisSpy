@@ -2,19 +2,19 @@ package dk.frv.aisspy;
 
 public class BaseStation {
 	
-	private long mmsi;
+	private int mmsi;
 	private String name;
 	
-	public BaseStation(long mmsi, String name) {
+	public BaseStation(int mmsi, String name) {
 		this.mmsi = mmsi;
 		this.name = name;
 	}
 	
-	public long getMmsi() {
+	public int getMmsi() {
 		return mmsi;
 	}
 	
-	public void setMmsi(long mmsi) {
+	public void setMmsi(int mmsi) {
 		this.mmsi = mmsi;
 	}
 	

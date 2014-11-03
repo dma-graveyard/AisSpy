@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.country.MidCountry;
-import dk.frv.ais.reader.AisTcpReader;
+import dk.dma.ais.reader.AisTcpReader;
+import dk.dma.enav.model.Country;
 import dk.frv.aisspy.BaseStation;
 import dk.frv.aisspy.FlowStatEntry;
 import dk.frv.aisspy.Region;
@@ -63,7 +63,7 @@ public class SystemStatus {
 		}
 
 		// Handle countries
-		for (MidCountry country : handler.getCountries()) {
+		for (Country country : handler.getCountries()) {
 			String countryCode = country.getTwoLetter();
 			CountryStatus countryStatus = new CountryStatus();
 			countryStatus.setSystemStatus(this);
@@ -106,7 +106,8 @@ public class SystemStatus {
 		// Handle base stations
 		for (BaseStation baseStation : handler.getBaseStations()) {
 			// Get report entry for base station
-			FlowStatEntry baseFlow = stats.getBaseStationReport().get(baseStation.getMmsi());
+			Map<Integer, FlowStatEntry> bsReportMap = stats.getBaseStationReport();
+			FlowStatEntry baseFlow = bsReportMap.get(baseStation.getMmsi());
 			if (baseFlow == null) {
 				failingBaseStaions.add(baseStation);
 				continue;

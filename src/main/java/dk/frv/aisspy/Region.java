@@ -2,19 +2,19 @@ package dk.frv.aisspy;
 
 public class Region {
 	
-	private long id;
+	private int id;
 	private String name;
 	
-	public Region(long id, String name) {
+	public Region(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

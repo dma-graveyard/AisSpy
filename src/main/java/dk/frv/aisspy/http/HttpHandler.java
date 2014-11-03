@@ -102,9 +102,9 @@ public class HttpHandler extends Thread {
 			httpResponse.setContent("Missing bs argument");
 			return;
 		}
-		long bs;
+		int bs;
 		try {
-			bs = Long.parseLong(bsStr);
+			bs = Integer.parseInt(bsStr);
 		} catch (NumberFormatException e) {
 			httpResponse.setBadRequest();
 			httpResponse.setContent("Bad bs argument");
@@ -143,9 +143,9 @@ public class HttpHandler extends Thread {
 			httpResponse.setContent("Missing region argument");
 			return;
 		}
-		long region;
+		int region;
 		try {
-			region = Long.parseLong(regionStr);
+			region = Integer.parseInt(regionStr);
 		} catch (NumberFormatException e) {
 			httpResponse.setBadRequest();
 			httpResponse.setContent("Bad region argument");

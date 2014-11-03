@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.country.MidCountry;
+import dk.dma.enav.model.Country;
 
 public class CountryStatus {
 	
 	private static final Logger LOG = Logger.getLogger(CountryStatus.class);
 
 	private Status status;
-	private MidCountry country;
+	private Country country;
 	private Date lastReceived;
 	private double rate;
 	private SystemStatus systemStatus;
@@ -30,11 +30,11 @@ public class CountryStatus {
 		this.status = status;
 	}
 
-	public MidCountry getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
-	public void setCountry(MidCountry country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 

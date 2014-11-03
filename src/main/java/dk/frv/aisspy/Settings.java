@@ -11,8 +11,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.country.CountryMapper;
-import dk.frv.ais.country.MidCountry;
+import dk.dma.enav.model.Country;
 
 public class Settings {
 
@@ -99,7 +98,7 @@ public class Settings {
 	private void getCountries(SystemHandler systemHandler) {
 		String countriesStr = props.getProperty("countries." + systemHandler.getName(), "");
 		for (String countryStr : StringUtils.split(countriesStr, ",")) {
-			MidCountry country = CountryMapper.getInstance().getByCode(countryStr);
+			Country country = Country.getByCode(countryStr);
 			if (country == null) {
 				LOG.error("Unknown country " + countryStr);
 				continue;

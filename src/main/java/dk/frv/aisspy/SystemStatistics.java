@@ -1,24 +1,23 @@
 package dk.frv.aisspy;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import dk.frv.ais.country.CountryMapper;
-import dk.frv.ais.country.MidCountry;
-import dk.frv.ais.message.AisMessage4;
+import dk.dma.ais.message.AisMessage4;
+import dk.dma.enav.model.Country;
 import dk.frv.aisspy.status.BaseStationStatus;
 
 public class SystemStatistics {
 
 	private FlowStatEntry flowStat = new FlowStatEntry();
 	private Date startTime = new Date();
-	private Map<String, FlowStatEntry> countryOrigin = new HashMap<String, FlowStatEntry>();
-	private Map<Long, FlowStatEntry> baseStationOrigin = new HashMap<Long, FlowStatEntry>();
-	private Map<Long, FlowStatEntry> baseStationReport = new HashMap<Long, FlowStatEntry>();
-	private Map<Long, FlowStatEntry> regionOrigin = new HashMap<Long, FlowStatEntry>();
-	private Map<Long, BaseStationStatus> baseStationStatus = new HashMap<Long, BaseStationStatus>();
-	private Map<Long, String> baseStationCountry = new HashMap<Long, String>();
+	private Map<String, FlowStatEntry> countryOrigin = new ConcurrentHashMap<String, FlowStatEntry>();
+	private Map<Integer, FlowStatEntry> baseStationOrigin = new ConcurrentHashMap<Integer, FlowStatEntry>();
+	private Map<Integer, FlowStatEntry> baseStationReport = new ConcurrentHashMap<Integer, FlowStatEntry>();
+	private Map<Integer, FlowStatEntry> regionOrigin = new ConcurrentHashMap<Integer, FlowStatEntry>();
+	private Map<Integer, BaseStationStatus> baseStationStatus = new ConcurrentHashMap<Integer, BaseStationStatus>();
+	private Map<Integer, String> baseStationCountry = new ConcurrentHashMap<Integer, String>();
 
 	public SystemStatistics() {
 
@@ -35,9 +34,10 @@ public class SystemStatistics {
 		entry.received();
 	}
 
-	public void markBaseStationOrigin(Long baseMmsi) {
-		if (baseMmsi == null)
+	public void markBaseStationOrigin(Integer baseMmsi) {
+		if (baseMmsi == null) {
 			return;
+		}
 		FlowStatEntry entry = baseStationOrigin.get(baseMmsi);
 		if (entry == null) {
 			entry = new FlowStatEntry();
@@ -50,12 +50,15 @@ public class SystemStatistics {
 		FlowStatEntry entry = baseStationReport.get(message.getUserId());
 		if (entry == null) {
 			entry = new FlowStatEntry();
+			if (message.getUserId() == 2190049) {
+				System.out.println("Entrering " + message.getUserId());
+			}
 			baseStationReport.put(message.getUserId(), entry);
 		}
 		entry.received();
 
 		String country = null;
-		if (message.getSourceTag() != null) {
+		if (message.getSourceTag() != null && message.getSourceTag().getCountry() != null) {
 			country = message.getSourceTag().getCountry().getTwoLetter();
 		}
 		if (country != null) {
@@ -67,7 +70,7 @@ public class SystemStatistics {
 		if (midPart.length() > 3) {
 			midPart = midPart.substring(0, 3);
 		}
-		MidCountry midCountry = CountryMapper.getInstance().getByMid(Integer.parseInt(midPart));
+		Country midCountry = Country.getByMid(Integer.parseInt(midPart));
 	
 		if (midCountry != null) {
 			BaseStationStatus bsStatus = baseStationStatus.get(message.getUserId());
@@ -85,9 +88,9 @@ public class SystemStatistics {
 	
 	public void markRegionOrigin(String strId) {
 		if (strId == null || strId.length() == 0) return;
-		long id = 0;
+		int id = 0;
 		try {
-			id = Long.parseLong(strId);
+			id = Integer.parseInt(strId);
 		} catch (NumberFormatException e) {
 			return;
 		}		
@@ -111,23 +114,23 @@ public class SystemStatistics {
 		return countryOrigin;
 	}
 
-	public Map<Long, FlowStatEntry> getBaseStationOrigin() {
+	public Map<Integer, FlowStatEntry> getBaseStationOrigin() {
 		return baseStationOrigin;
 	}
 
-	public Map<Long, FlowStatEntry> getBaseStationReport() {
+	public Map<Integer, FlowStatEntry> getBaseStationReport() {
 		return baseStationReport;
 	}
 
-	public Map<Long, String> getBaseStationCountry() {
+	public Map<Integer, String> getBaseStationCountry() {
 		return baseStationCountry;
 	}
 	
-	public Map<Long, BaseStationStatus> getBaseStationStatus() {
+	public Map<Integer, BaseStationStatus> getBaseStationStatus() {
 		return baseStationStatus;
 	}
 	
-	public Map<Long, FlowStatEntry> getRegionOrigin() {
+	public Map<Integer, FlowStatEntry> getRegionOrigin() {
 		return regionOrigin;
 	}
 

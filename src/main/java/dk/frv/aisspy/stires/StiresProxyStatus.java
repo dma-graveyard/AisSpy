@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import dk.frv.ais.country.Country;
+import dk.dma.enav.model.Country;
 
 public class StiresProxyStatus {
 	

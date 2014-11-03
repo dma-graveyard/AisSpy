@@ -2,24 +2,24 @@ package dk.frv.aisspy.status;
 
 import java.util.Date;
 
-import dk.frv.ais.geo.GeoLocation;
+import dk.dma.enav.model.geometry.Position;
 
 public class BaseStationStatus implements Comparable<BaseStationStatus> {
 		
-	private long mmsi;
+	private int mmsi;
 	private String country;
 	private Date lastReveived;
-	private GeoLocation pos;
+	private Position pos;
 	
 	public BaseStationStatus() {
 		
 	}
 
-	public long getMmsi() {
+	public int getMmsi() {
 		return mmsi;
 	}
 
-	public void setMmsi(long mmsi) {
+	public void setMmsi(int mmsi) {
 		this.mmsi = mmsi;
 	}
 	
@@ -39,11 +39,11 @@ public class BaseStationStatus implements Comparable<BaseStationStatus> {
 		this.lastReveived = lastReveived;
 	}
 
-	public GeoLocation getPos() {
+	public Position getPos() {
 		return pos;
 	}
 
-	public void setPos(GeoLocation pos) {
+	public void setPos(Position pos) {
 		this.pos = pos;
 	}
 	
@@ -54,7 +54,7 @@ public class BaseStationStatus implements Comparable<BaseStationStatus> {
 
 	@Override
 	public int compareTo(BaseStationStatus bs) {
-		return (new Long(mmsi)).compareTo(new Long(bs.mmsi));
+		return (new Integer(mmsi)).compareTo(new Integer(bs.mmsi));
 	}
 	
 }
