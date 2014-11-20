@@ -50,9 +50,6 @@ public class SystemStatistics {
 		FlowStatEntry entry = baseStationReport.get(message.getUserId());
 		if (entry == null) {
 			entry = new FlowStatEntry();
-			if (message.getUserId() == 2190049) {
-				System.out.println("Entrering " + message.getUserId());
-			}
 			baseStationReport.put(message.getUserId(), entry);
 		}
 		entry.received();
@@ -66,7 +63,7 @@ public class SystemStatistics {
 		}
 		
 		// Determine country for base station by MMSI
-		String midPart = Long.toString(message.getUserId());
+		String midPart = Integer.toString(message.getUserId());
 		if (midPart.length() > 3) {
 			midPart = midPart.substring(0, 3);
 		}

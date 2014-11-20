@@ -27,7 +27,7 @@
         <level value="ERROR" />
     </logger>
     
-    <logger name="dk.frv.ais.">
+    <logger name="dk.dma.ais">
         <level value="ERROR" />
     </logger>    
         
